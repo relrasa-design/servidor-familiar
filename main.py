@@ -10,22 +10,25 @@ API_HASH = os.getenv("API_HASH", "28d5e5fc5ab1d20b575b951917b8871b")
 BOT_TOKEN = os.getenv("BOT_TOKEN", "")
 CHANNEL_NAME = os.getenv("CHANNEL_NAME", "pelis_rolo_family")
 
-bot = Client("family_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN, in_memory=True)
+bot = None
 
 @app.on_event("startup")
 async def startup_event():
+    global bot
+    bot = Client("family_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN, in_memory=True)
     await bot.start()
 
 @app.on_event("shutdown")
 async def shutdown_event():
-    await bot.stop()
+    if bot:
+        await bot.stop()
 
 @app.get("/")
 async def root():
     return {"status": "Servidor Familiar Activo"}
 
 @app.get("/stream/{message_id}")
-async def stream_video(message_id: int, request: Request):
+async def stream_video(message_id: int, request: Readout := None, request: Request = None):
     try:
         message = await bot.get_messages(CHANNEL_NAME, message_id)
         if not message or not message.video:

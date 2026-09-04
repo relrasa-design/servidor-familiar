@@ -28,7 +28,7 @@ async def root():
     return {"status": "Servidor Familiar Activo"}
 
 @app.get("/stream/{message_id}")
-async def stream_video(message_id: int, request: Readout := None, request: Request = None):
+async def stream_video(message_id: int, request: Request):
     try:
         message = await bot.get_messages(CHANNEL_NAME, message_id)
         if not message or not message.video:

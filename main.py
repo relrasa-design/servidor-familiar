@@ -1,4 +1,12 @@
+import asyncio
 import os
+
+# Inicializar el bucle de eventos antes de importar pyrogram
+try:
+    asyncio.get_event_loop()
+except RuntimeError:
+    asyncio.set_event_loop(asyncio.new_event_loop())
+
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import StreamingResponse
 from pyrogram import Client
